@@ -19,12 +19,14 @@ def gerar_treino():
 
     # Prompt para o Gemini
     prompt = (
-        f"Crie um plano de treino de 4 semanas focado em aumentar a força nos três grandes levantamentos "
-        f"(squat, bench press e deadlift).\n\n"
-        f"Os PRs atuais do atleta são:\n{pr_text}\n\n"
-        f"O plano deve incluir frequência semanal, progressão de carga, variações de exercício, "
-        f"volume e intensidade. Apresente o plano semana a semana de forma organizada e clara."
+        f"Create a 4-week training program focused on increasing strength in the exercises "
+        f"The athlete's current PRs are:\n{pr_text}\n\n"
+        f"You must provide him the exact weght in kg, like instead of give him this info '3 sets of 4 reps at 80%' say '3 sets of 4 reps at 80% in your case 120kg'  "
+        f"The program should include weekly frequency, load progression, "
+        f"volume, and intensity. Present the plan week by week in a clear and organized manner. "
+        f"Write and return the response using only <h3> and <p> HTML tags."
     )
+
 
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')
