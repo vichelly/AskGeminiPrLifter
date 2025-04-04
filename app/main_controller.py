@@ -9,23 +9,21 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 @main_controller.route('/treino', methods=['POST'])
 def gerar_treino():
-    data = request.get_json()
+    prs = request.get_json()
 
-    nome = data.get('name')
-    peso_corporal = data.get('bodyWeight')
-    prs = data.get('prs', [])
+    if not isinstance(prs, list) or not prs:
+        return jsonify({'error': 'Formato inválido: esperado uma lista de PRs'}), 400
 
-    if not nome or not peso_corporal or not prs:
-        return jsonify({'error': 'Dados incompletos: name, bodyWeight e prs são obrigatórios'}), 400
+    # Monta o texto com os PRs
+    pr_text = "\n".join([f"{pr['exercise'].capitalize()}: {pr['kg']} kg" for pr in prs])
 
-    pr_text = "\n".join([f"{pr['exercise']}: {pr['weight']} kg" for pr in prs])
-
+    # Prompt para o Gemini
     prompt = (
         f"Crie um plano de treino de 4 semanas focado em aumentar a força nos três grandes levantamentos "
-        f"(squat, bench press e deadlift) para o atleta {nome}, que pesa {peso_corporal} kg.\n\n"
-        f"Os PRs atuais dele são:\n{pr_text}\n\n"
+        f"(squat, bench press e deadlift).\n\n"
+        f"Os PRs atuais do atleta são:\n{pr_text}\n\n"
         f"O plano deve incluir frequência semanal, progressão de carga, variações de exercício, "
-        f"volume e intensidade. Apresente o plano semana a semana de forma organizada."
+        f"volume e intensidade. Apresente o plano semana a semana de forma organizada e clara."
     )
 
     try:
